@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Types
 interface SupabaseContextType {
@@ -23,13 +24,46 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: {
       async getItem(key: string) {
-        return await SecureStore.getItemAsync(key);
+        try {
+          // Try SecureStore first
+          const value = await SecureStore.getItemAsync(key);
+          if (value !== null) return value;
+          
+          // Fallback to AsyncStorage
+          return await AsyncStorage.getItem(key);
+        } catch (error) {
+          console.warn('Storage getItem error:', error);
+          return null;
+        }
       },
       async setItem(key: string, value: string) {
-        await SecureStore.setItemAsync(key, value);
+        try {
+          // Check if value is too large for SecureStore
+          if (value.length > 2000) {
+            console.warn('Value too large for SecureStore, using AsyncStorage');
+            await AsyncStorage.setItem(key, value);
+            return;
+          }
+          
+          // Try SecureStore first
+          await SecureStore.setItemAsync(key, value);
+        } catch (error) {
+          console.warn('SecureStore failed, using AsyncStorage fallback');
+          await AsyncStorage.setItem(key, value);
+        }
       },
       async removeItem(key: string) {
-        await SecureStore.deleteItemAsync(key);
+        try {
+          await SecureStore.deleteItemAsync(key);
+        } catch (error) {
+          console.warn('SecureStore removeItem error:', error);
+        }
+        // Also try to remove from AsyncStorage
+        try {
+          await AsyncStorage.removeItem(key);
+        } catch (error) {
+          console.warn('AsyncStorage removeItem error:', error);
+        }
       },
     },
   },

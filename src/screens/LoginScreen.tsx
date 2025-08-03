@@ -14,6 +14,7 @@ import {
   Title,
   Paragraph,
 } from 'react-native-paper';
+import CustomPasswordInput from '@/components/CustomPasswordInput';
 import { useSupabase } from '@/services/SupabaseContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/types';
@@ -69,14 +70,11 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           autoComplete="email"
         />
 
-        <TextInput
+        <CustomPasswordInput
           label="Password"
           value={password}
           onChangeText={setPassword}
-          mode="outlined"
           style={styles.input}
-          secureTextEntry
-          autoComplete="password"
         />
 
         <Button
@@ -107,13 +105,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
   },
   surface: {
     flex: 1,
-    margin: 20,
+    margin: 0,
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 0,
     elevation: 4,
     justifyContent: 'center',
   },
@@ -130,10 +128,12 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 15,
+    width: '100%',
   },
   button: {
     marginTop: 10,
     paddingVertical: 8,
+    width: '100%',
   },
   footer: {
     flexDirection: 'row',
