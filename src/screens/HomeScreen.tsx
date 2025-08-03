@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,10 +13,12 @@ import {
   Text,
   Avatar,
   Divider,
+  FAB,
 } from 'react-native-paper';
 import { useSupabase } from '@/services/SupabaseContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/types';
+import Chatbot from '@/components/Chatbot';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -26,6 +28,7 @@ interface Props {
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const { user, signOut } = useSupabase();
+  const [chatbotVisible, setChatbotVisible] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -36,7 +39,8 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <ScrollView>
       <Surface style={styles.header}>
         <View style={styles.userInfo}>
           <Avatar.Text size={50} label={user?.email?.charAt(0).toUpperCase() || 'U'} />
@@ -110,7 +114,20 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           </Card.Content>
         </Card>
       </View>
-    </ScrollView>
+      </ScrollView>
+      
+      <FAB
+        style={styles.fab}
+        icon="chat"
+        onPress={() => setChatbotVisible(true)}
+        label="Task Assistant"
+      />
+      
+      <Chatbot
+        visible={chatbotVisible}
+        onClose={() => setChatbotVisible(false)}
+      />
+    </View>
   );
 };
 
@@ -185,6 +202,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontStyle: 'italic',
     opacity: 0.7,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
