@@ -51,7 +51,7 @@ Task Scheduler is designed to help people become more disciplined with their hab
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/ericanderson/TaskScheduler.git
+   git clone https://github.com/ericcanderson8/TaskScheduler.git
    cd TaskScheduler
    ```
 
