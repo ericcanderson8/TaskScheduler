@@ -51,7 +51,8 @@ export interface Goal {
 
 // Navigation types
 export type RootStackParamList = {
-  Auth: undefined;
+  Login: undefined;
+  Register: undefined;
   Main: undefined;
 };
 

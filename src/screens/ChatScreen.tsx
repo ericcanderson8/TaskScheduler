@@ -76,7 +76,7 @@ const ChatScreen: React.FC = () => {
     setIsLoading(true);
 
     // Add user message
-    const newMessages = [...messages, { role: 'user', content: userMessage }];
+    const newMessages: ChatMessage[] = [...messages, { role: 'user' as const, content: userMessage }];
     setMessages(newMessages);
 
     try {
@@ -91,10 +91,10 @@ const ChatScreen: React.FC = () => {
         if (result.task && !result.needsMoreInfo) {
           // Create the task
           await createTask(result.task);
-          setMessages([...newMessages, { role: 'assistant', content: result.response }]);
+          setMessages([...newMessages, { role: 'assistant' as const, content: result.response }]);
         } else {
           // Need more information
-          setMessages([...newMessages, { role: 'assistant', content: result.response }]);
+          setMessages([...newMessages, { role: 'assistant' as const, content: result.response }]);
           if (result.task) {
             setCurrentTask(result.task);
           }
@@ -104,15 +104,15 @@ const ChatScreen: React.FC = () => {
                  userMessage.toLowerCase().includes('show')) {
         // Query tasks
         const response = await OpenAIService.queryTasks(userMessage, tasks);
-        setMessages([...newMessages, { role: 'assistant', content: response }]);
+        setMessages([...newMessages, { role: 'assistant' as const, content: response }]);
       } else {
         // General chat
         const response = await OpenAIService.chat(newMessages);
-        setMessages([...newMessages, { role: 'assistant', content: response }]);
+        setMessages([...newMessages, { role: 'assistant' as const, content: response }]);
       }
     } catch {
       setMessages([...newMessages, { 
-        role: 'assistant', 
+        role: 'assistant' as const, 
         content: 'Sorry, I\'m having trouble right now. Please try again.' 
       }]);
     } finally {
