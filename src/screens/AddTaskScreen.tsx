@@ -131,18 +131,18 @@ const AddTaskScreen: React.FC = () => {
         title: form.title.trim(),
         description: form.description?.trim() || null,
         priority: form.priority,
-        duration_minutes: form.duration_minutes,
+        duration_minutes: form.duration_minutes || 60,
         status: 'pending',
         due_date: suggestedDate || new Date().toISOString().split('T')[0],
         start_time: suggestedTime || null,
-        end_time: suggestedTime ? (() => {
-          const endTime = new Date();
-          endTime.setHours(
-            parseInt(suggestedTime.split(':')[0]) + Math.ceil(form.duration_minutes / 60),
-            0, 0, 0
-          );
-          return `${endTime.getHours().toString().padStart(2, '0')}:00`;
-        })() : null,
+                  end_time: suggestedTime ? (() => {
+            const endTime = new Date();
+            endTime.setHours(
+              parseInt(suggestedTime.split(':')[0]) + Math.ceil((form.duration_minutes || 60) / 60),
+              0, 0, 0
+            );
+            return `${endTime.getHours().toString().padStart(2, '0')}:00`;
+          })() : null,
       };
 
       const { error } = await supabase
@@ -264,7 +264,7 @@ const AddTaskScreen: React.FC = () => {
               {[30, 60, 90, 120, 180].map((duration) => (
                 <Chip
                   key={duration}
-                  selected={form.duration_minutes === duration}
+                  selected={(form.duration_minutes || 60) === duration}
                   onPress={() => handleDurationChange(duration)}
                   style={styles.durationChip}
                   textStyle={styles.durationChipText}
@@ -276,7 +276,7 @@ const AddTaskScreen: React.FC = () => {
             
             <TextInput
               label="Custom Duration (minutes)"
-              value={form.duration_minutes.toString()}
+              value={(form.duration_minutes || 60).toString()}
               onChangeText={(text) => {
                 const duration = parseInt(text) || 60;
                 handleDurationChange(duration);
@@ -305,14 +305,14 @@ const AddTaskScreen: React.FC = () => {
                   {formatTime(suggestedTime)} - {formatTime((() => {
                     const endTime = new Date();
                     endTime.setHours(
-                      parseInt(suggestedTime.split(':')[0]) + Math.ceil(form.duration_minutes / 60),
+                      parseInt(suggestedTime.split(':')[0]) + Math.ceil((form.duration_minutes || 60) / 60),
                       0, 0, 0
                     );
                     return `${endTime.getHours().toString().padStart(2, '0')}:00`;
                   })())}
                 </Text>
                 <Text style={styles.suggestionDuration}>
-                  Duration: {form.duration_minutes < 60 ? `${form.duration_minutes}m` : `${Math.floor(form.duration_minutes / 60)}h${form.duration_minutes % 60 ? ` ${form.duration_minutes % 60}m` : ''}`}
+                  Duration: {(form.duration_minutes || 60) < 60 ? `${form.duration_minutes || 60}m` : `${Math.floor((form.duration_minutes || 60) / 60)}h${(form.duration_minutes || 60) % 60 ? ` ${(form.duration_minutes || 60) % 60}m` : ''}`}
                 </Text>
               </View>
             </Card.Content>

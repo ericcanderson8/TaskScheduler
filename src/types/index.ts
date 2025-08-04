@@ -86,7 +86,7 @@ export interface TaskForm {
   due_date?: string;
   start_time?: string;
   end_time?: string;
-  duration_minutes?: number;
+  duration_minutes: number;
   category?: string;
 }
 
