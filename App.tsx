@@ -6,11 +6,9 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Import screens
-import HomeScreen from '@/screens/HomeScreen';
 import LoginScreen from '@/screens/LoginScreen';
 import RegisterScreen from '@/screens/RegisterScreen';
-import TaskListScreen from '@/screens/TaskListScreen';
-import CreateTaskScreen from '@/screens/CreateTaskScreen';
+import MainTabNavigator from '@/navigation/MainTabNavigator';
 
 // Import services
 import { SupabaseProvider } from '@/services/SupabaseContext';
@@ -46,19 +44,9 @@ export default function App() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen 
-                name="Home" 
-                component={HomeScreen} 
-                options={{ title: 'Task Scheduler' }}
-              />
-              <Stack.Screen 
-                name="TaskList" 
-                component={TaskListScreen} 
-                options={{ title: 'My Tasks' }}
-              />
-              <Stack.Screen 
-                name="CreateTask" 
-                component={CreateTaskScreen} 
-                options={{ title: 'Create New Task' }}
+                name="Main" 
+                component={MainTabNavigator} 
+                options={{ headerShown: false }}
               />
             </Stack.Navigator>
           </NavigationContainer>

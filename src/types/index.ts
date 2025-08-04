@@ -11,9 +11,12 @@ export interface Task {
   user_id: string;
   title: string;
   description?: string;
-  due_date?: string;
   priority: 'low' | 'medium' | 'high';
-  status: 'pending' | 'in_progress' | 'completed';
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  due_date?: string;
+  start_time?: string;
+  end_time?: string;
+  duration_minutes?: number;
   category?: string;
   created_at: string;
   updated_at: string;
@@ -27,8 +30,8 @@ export interface Habit {
   description?: string;
   frequency: 'daily' | 'weekly' | 'monthly';
   target_count: number;
-  current_streak: number;
-  longest_streak: number;
+  current_count: number;
+  streak: number;
   created_at: string;
   updated_at: string;
 }
@@ -40,24 +43,22 @@ export interface Goal {
   title: string;
   description?: string;
   target_date?: string;
-  progress: number; // 0-100
-  status: 'active' | 'completed' | 'paused';
+  progress: number;
+  status: 'active' | 'completed' | 'cancelled';
   created_at: string;
   updated_at: string;
 }
 
 // Navigation types
 export type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  Home: undefined;
-  TaskList: undefined;
-  CreateTask: undefined;
-  EditTask: { taskId: string };
-  HabitList: undefined;
-  CreateHabit: undefined;
-  GoalList: undefined;
-  CreateGoal: undefined;
+  Auth: undefined;
+  Main: undefined;
+};
+
+export type MainTabParamList = {
+  Chat: undefined;
+  Today: undefined;
+  AddTask: undefined;
 };
 
 // API Response types
@@ -81,8 +82,11 @@ export interface RegisterForm {
 export interface TaskForm {
   title: string;
   description?: string;
-  due_date?: string;
   priority: 'low' | 'medium' | 'high';
+  due_date?: string;
+  start_time?: string;
+  end_time?: string;
+  duration_minutes?: number;
   category?: string;
 }
 
@@ -97,4 +101,26 @@ export interface GoalForm {
   title: string;
   description?: string;
   target_date?: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  start_time: string;
+  end_time: string;
+  duration_minutes: number;
+  priority: 'low' | 'medium' | 'high';
+  status: 'pending' | 'in_progress' | 'completed';
+}
+
+export interface TimeSlot {
+  start_time: string;
+  end_time: string;
+  isAvailable: boolean;
+  task?: Task;
+}
+
+export interface DaySchedule {
+  date: string;
+  timeSlots: TimeSlot[];
 } 

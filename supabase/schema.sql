@@ -1,6 +1,3 @@
--- Enable Row Level Security
-ALTER DATABASE postgres SET "app.jwt_secret" TO 'your-jwt-secret';
-
 -- Create tables
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
@@ -16,9 +13,12 @@ CREATE TABLE IF NOT EXISTS public.tasks (
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
-    due_date TIMESTAMP WITH TIME ZONE,
+    due_date DATE,
+    start_time TIME,
+    end_time TIME,
+    duration_minutes INTEGER,
     priority TEXT CHECK (priority IN ('low', 'medium', 'high')) DEFAULT 'medium',
-    status TEXT CHECK (status IN ('pending', 'in_progress', 'completed')) DEFAULT 'pending',
+    status TEXT CHECK (status IN ('pending', 'in_progress', 'completed', 'cancelled')) DEFAULT 'pending',
     category TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS public.habits (
     description TEXT,
     frequency TEXT CHECK (frequency IN ('daily', 'weekly', 'monthly')) DEFAULT 'daily',
     target_count INTEGER DEFAULT 1,
-    current_streak INTEGER DEFAULT 0,
-    longest_streak INTEGER DEFAULT 0,
+    current_count INTEGER DEFAULT 0,
+    streak INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS public.goals (
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
-    target_date TIMESTAMP WITH TIME ZONE,
+    target_date DATE,
     progress INTEGER CHECK (progress >= 0 AND progress <= 100) DEFAULT 0,
-    status TEXT CHECK (status IN ('active', 'completed', 'paused')) DEFAULT 'active',
+    status TEXT CHECK (status IN ('active', 'completed', 'cancelled')) DEFAULT 'active',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

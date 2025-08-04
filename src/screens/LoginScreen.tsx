@@ -40,7 +40,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     setLoading(true);
     try {
       await signIn(email, password);
-      navigation.replace('Home');
+      navigation.replace('Main');
     } catch (error: any) {
       Alert.alert('Login Error', error.message);
     } finally {
