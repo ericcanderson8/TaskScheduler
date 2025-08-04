@@ -1,3 +1,14 @@
+-- Drop existing tables (if they exist)
+DROP TABLE IF EXISTS public.habit_logs CASCADE;
+DROP TABLE IF EXISTS public.habits CASCADE;
+DROP TABLE IF EXISTS public.goals CASCADE;
+DROP TABLE IF EXISTS public.tasks CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+
+-- Drop existing functions and triggers
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
+DROP FUNCTION IF EXISTS public.update_updated_at_column() CASCADE;
+
 -- Create tables
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,

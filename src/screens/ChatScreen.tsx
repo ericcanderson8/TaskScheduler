@@ -185,8 +185,9 @@ const ChatScreen: React.FC = () => {
       <ScrollView
         ref={scrollViewRef}
         style={styles.messagesContainer}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         contentContainerStyle={styles.messagesContent}
+        keyboardShouldPersistTaps="handled"
       >
         {messages.map((message, index) => (
           <View
@@ -322,6 +323,7 @@ const styles = StyleSheet.create({
   },
   messagesContent: {
     paddingVertical: 20,
+    flexGrow: 1,
   },
   messageContainer: {
     flexDirection: 'row',

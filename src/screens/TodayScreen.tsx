@@ -287,7 +287,11 @@ const TodayScreen: React.FC = () => {
       </Surface>
 
       {/* Schedule */}
-      <ScrollView style={styles.scheduleContainer}>
+      <ScrollView 
+        style={styles.scheduleContainer}
+        showsVerticalScrollIndicator={true}
+        contentContainerStyle={styles.scheduleContent}
+      >
         {timeSlots.map((slot, index) => renderTimeSlot(slot, index))}
       </ScrollView>
 
@@ -320,6 +324,9 @@ const styles = StyleSheet.create({
   scheduleContainer: {
     flex: 1,
     paddingHorizontal: 20,
+  },
+  scheduleContent: {
+    paddingBottom: 20,
   },
   timeSlot: {
     flexDirection: 'row',

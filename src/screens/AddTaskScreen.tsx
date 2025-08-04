@@ -213,7 +213,12 @@ const AddTaskScreen: React.FC = () => {
         <Text style={styles.headerSubtitle}>time it today</Text>
       </Surface>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        showsVerticalScrollIndicator={true}
+        contentContainerStyle={styles.contentContainer}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Task Details */}
         <Card style={styles.card}>
           <Card.Content>
@@ -357,6 +362,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
   card: {
     marginBottom: 20,

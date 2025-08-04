@@ -53,51 +53,58 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Surface style={styles.surface}>
-        <Title style={styles.title}>Task Scheduler</Title>
-        <Paragraph style={styles.subtitle}>
-          Stay on top of your goals and build better habits
-        </Paragraph>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Surface style={styles.surface}>
+          <Title style={styles.title}>Task Scheduler</Title>
+          <Paragraph style={styles.subtitle}>
+            Stay on top of your goals and build better habits
+          </Paragraph>
 
-        <TextInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          mode="outlined"
-          style={styles.input}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoComplete="email"
-        />
+          <TextInput
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            mode="outlined"
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoComplete="email"
+          />
 
-        <CustomPasswordInput
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
+          <CustomPasswordInput
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+          />
 
-        <Button
-          mode="contained"
-          onPress={handleLogin}
-          style={styles.button}
-          loading={loading}
-          disabled={loading}
-        >
-          Sign In
-        </Button>
-
-        <View style={styles.footer}>
-          <Text>Don't have an account? </Text>
           <Button
-            mode="text"
-            onPress={() => navigation.navigate('Register')}
-            compact
+            mode="contained"
+            onPress={handleLogin}
+            style={styles.button}
+            loading={loading}
+            disabled={loading}
           >
-            Sign Up
+            Sign In
           </Button>
-        </View>
-      </Surface>
+
+          <View style={styles.footer}>
+            <Text>Don't have an account? </Text>
+            <Button
+              mode="text"
+              onPress={() => navigation.navigate('Register')}
+              compact
+            >
+              Sign Up
+            </Button>
+          </View>
+        </Surface>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -107,13 +114,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  surface: {
+  scrollView: {
     flex: 1,
-    margin: 0,
-    padding: 20,
-    borderRadius: 0,
-    elevation: 4,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
+  },
+  surface: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 10,
+    elevation: 4,
   },
   title: {
     fontSize: 28,
