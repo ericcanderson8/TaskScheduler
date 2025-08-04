@@ -97,15 +97,6 @@ const TodayScreen: React.FC = () => {
     return `${displayHour}:${minute} ${ampm}`;
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return '#f44336';
-      case 'medium': return '#ff9800';
-      case 'low': return '#4caf50';
-      default: return '#9e9e9e';
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return '#4caf50';
@@ -135,19 +126,13 @@ const TodayScreen: React.FC = () => {
           slot.task && styles.taskSlot
         ]}>
           {slot.task ? (
-            <Card style={[styles.taskCard, { borderLeftColor: getPriorityColor(slot.task.priority) }]}>
+            <Card style={[styles.taskCard, { borderLeftColor: getStatusColor(slot.task.status) }]}>
               <Card.Content style={styles.taskContent}>
                 <Text style={styles.taskTitle}>{slot.task.title}</Text>
                 {slot.task.description && (
                   <Text style={styles.taskDescription}>{slot.task.description}</Text>
                 )}
                 <View style={styles.taskMeta}>
-                  <Chip 
-                    mode="outlined" 
-                    style={[styles.priorityChip, { borderColor: getPriorityColor(slot.task.priority) }]}
-                  >
-                    {slot.task.priority}
-                  </Chip>
                   <Chip 
                     mode="outlined" 
                     style={[styles.statusChip, { borderColor: getStatusColor(slot.task.status) }]}
@@ -159,7 +144,7 @@ const TodayScreen: React.FC = () => {
             </Card>
           ) : (
             <View style={styles.emptySlot}>
-              <Text style={styles.emptySlotText}>Available</Text>
+              <Text style={styles.emptySlotText}>Free</Text>
             </View>
           )}
         </View>
@@ -268,8 +253,21 @@ const TodayScreen: React.FC = () => {
             }}
           />
           
-          <TouchableOpacity onPress={() => setShowMonthView(true)}>
-            <Text style={styles.dateText}>{formatDate(selectedDate)}</Text>
+          <TouchableOpacity 
+            style={styles.dateContainer} 
+            onPress={() => setShowMonthView(true)}
+          >
+            <Text style={styles.dateText}>
+              {selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </Text>
+            <Text style={styles.dayText}>
+              {selectedDate.toLocaleDateString('en-US', { weekday: 'long' })}
+            </Text>
+            <IconButton
+              icon="chevron-down"
+              size={16}
+              style={styles.dropdownIcon}
+            />
           </TouchableOpacity>
           
           <IconButton
@@ -303,7 +301,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
   },
   header: {
-    paddingTop: 50,
+    paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
     elevation: 2,
@@ -313,10 +311,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  dateContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   dateText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#1a1a1a',
+    marginRight: 4,
+  },
+  dayText: {
+    fontSize: 14,
+    color: '#666',
+    marginRight: 4,
+  },
+  dropdownIcon: {
+    margin: 0,
   },
   scheduleContainer: {
     flex: 1,
@@ -390,9 +401,6 @@ const styles = StyleSheet.create({
   taskMeta: {
     flexDirection: 'row',
     gap: 8,
-  },
-  priorityChip: {
-    height: 24,
   },
   statusChip: {
     height: 24,

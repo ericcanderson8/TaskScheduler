@@ -1,10 +1,10 @@
-import js from '@eslint/js';
-import typescript from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
-import react from 'eslint-plugin-react';
-import reactNative from 'eslint-plugin-react-native';
+const js = require('@eslint/js');
+const typescript = require('@typescript-eslint/eslint-plugin');
+const typescriptParser = require('@typescript-eslint/parser');
+const react = require('eslint-plugin-react');
+const reactNative = require('eslint-plugin-react-native');
 
-export default [
+module.exports = [
   js.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],

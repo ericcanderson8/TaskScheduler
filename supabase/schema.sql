@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS public.tasks (
     start_time TIME,
     end_time TIME,
     duration_minutes INTEGER,
-    priority TEXT CHECK (priority IN ('low', 'medium', 'high')) DEFAULT 'medium',
     status TEXT CHECK (status IN ('pending', 'in_progress', 'completed', 'cancelled')) DEFAULT 'pending',
     category TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

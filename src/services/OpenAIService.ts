@@ -14,7 +14,6 @@ export interface ChatMessage {
 export interface TaskCreationRequest {
   title: string;
   description?: string;
-  priority?: 'low' | 'medium' | 'high';
   due_date?: string;
   category?: string;
 }
@@ -27,7 +26,6 @@ export class OpenAIService {
 3. Ask for missing information when creating tasks
 
 When creating tasks, always ask for:
-- Priority (low/medium/high) if not specified
 - Due date if not specified
 - Description if not specified
 - Category if not specified
@@ -68,7 +66,6 @@ Current date: ${new Date().toISOString().split('T')[0]}`;
 Available task fields:
 - title (required)
 - description (optional)
-- priority: low/medium/high (optional)
 - due_date: YYYY-MM-DD format (optional)
 - category (optional)
 
@@ -77,7 +74,6 @@ If the message is about creating a task, respond with a JSON object like:
   "task": {
     "title": "task title",
     "description": "task description",
-    "priority": "medium",
     "due_date": "2024-12-19",
     "category": "work"
   },
@@ -88,7 +84,7 @@ If the message is about creating a task, respond with a JSON object like:
 If information is missing, respond with:
 {
   "task": null,
-  "response": "What priority would you like for this task? (low/medium/high)",
+  "response": "What due date would you like for this task?",
   "needsMoreInfo": true
 }
 

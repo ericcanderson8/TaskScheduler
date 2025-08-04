@@ -146,9 +146,7 @@ const ChatScreen: React.FC = () => {
     }
   };
 
-  const handleQuickResponse = (response: string) => {
-    setInputText(response);
-  };
+
 
   const formatTime = () => {
     const now = new Date();
@@ -225,30 +223,7 @@ const ChatScreen: React.FC = () => {
         )}
       </ScrollView>
 
-      {/* Quick Actions */}
-      <Surface style={styles.quickActions}>
-        <Text style={styles.quickActionsTitle}>Quick Actions</Text>
-        <View style={styles.quickButtons}>
-          <IconButton
-            icon="calendar-today"
-            mode="contained"
-            onPress={() => handleQuickResponse('What are my tasks for today?')}
-            style={styles.quickButton}
-          />
-          <IconButton
-            icon="plus"
-            mode="contained"
-            onPress={() => handleQuickResponse('Create a new task')}
-            style={styles.quickButton}
-          />
-          <IconButton
-            icon="clock-outline"
-            mode="contained"
-            onPress={() => handleQuickResponse('What\'s my schedule for today?')}
-            style={styles.quickButton}
-          />
-        </View>
-      </Surface>
+
 
       {/* Input */}
       <Surface style={styles.inputContainer}>
@@ -360,25 +335,7 @@ const styles = StyleSheet.create({
   loadingIndicator: {
     marginRight: 8,
   },
-  quickActions: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    backgroundColor: '#ffffff',
-  },
-  quickActionsTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-    color: '#1a1a1a',
-  },
-  quickButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  quickButton: {
-    backgroundColor: '#6200ee',
-  },
+
   inputContainer: {
     padding: 20,
     backgroundColor: '#ffffff',

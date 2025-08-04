@@ -11,7 +11,6 @@ export interface Task {
   user_id: string;
   title: string;
   description?: string;
-  priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   due_date?: string;
   start_time?: string;
@@ -83,7 +82,6 @@ export interface RegisterForm {
 export interface TaskForm {
   title: string;
   description?: string;
-  priority: 'low' | 'medium' | 'high';
   due_date?: string;
   start_time?: string;
   end_time?: string;
@@ -110,7 +108,6 @@ export interface CalendarEvent {
   start_time: string;
   end_time: string;
   duration_minutes: number;
-  priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in_progress' | 'completed';
 }
 

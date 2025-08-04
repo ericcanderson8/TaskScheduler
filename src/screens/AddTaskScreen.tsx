@@ -25,7 +25,6 @@ const AddTaskScreen: React.FC = () => {
   const [form, setForm] = useState<TaskForm>({
     title: '',
     description: '',
-    priority: 'medium',
     duration_minutes: 60,
   });
   const [suggestedTime, setSuggestedTime] = useState<string | null>(null);
@@ -130,7 +129,6 @@ const AddTaskScreen: React.FC = () => {
         user_id: user.id,
         title: form.title.trim(),
         description: form.description?.trim() || null,
-        priority: form.priority,
         duration_minutes: form.duration_minutes || 60,
         status: 'pending',
         due_date: suggestedDate || new Date().toISOString().split('T')[0],
@@ -162,7 +160,6 @@ const AddTaskScreen: React.FC = () => {
               setForm({
                 title: '',
                 description: '',
-                priority: 'medium',
                 duration_minutes: 60,
               });
               setSuggestedTime(null);
@@ -241,17 +238,7 @@ const AddTaskScreen: React.FC = () => {
               placeholder="Add more details..."
             />
             
-            <Text style={styles.label}>Priority</Text>
-            <SegmentedButtons
-              value={form.priority}
-              onValueChange={(value) => setForm(prev => ({ ...prev, priority: value as 'low' | 'medium' | 'high' }))}
-              buttons={[
-                { value: 'low', label: 'Low', icon: 'flag' },
-                { value: 'medium', label: 'Medium', icon: 'flag' },
-                { value: 'high', label: 'High', icon: 'flag' },
-              ]}
-              style={styles.segmentedButtons}
-            />
+
           </Card.Content>
         </Card>
 
@@ -295,7 +282,7 @@ const AddTaskScreen: React.FC = () => {
             <Card.Content>
               <Text style={styles.suggestionTitle}>📅 Suggested Schedule</Text>
               <Text style={styles.suggestionText}>
-                I found an available slot for your task:
+                I found a free slot for your task:
               </Text>
               <View style={styles.suggestionDetails}>
                 <Text style={styles.suggestionDate}>
