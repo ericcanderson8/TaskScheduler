@@ -15,7 +15,6 @@ import {
   IconButton,
   ActivityIndicator,
   Avatar,
-  Divider,
   useTheme,
 } from 'react-native-paper';
 import { useSupabase } from '@/services/SupabaseContext';
@@ -31,7 +30,7 @@ const ChatScreen: React.FC = () => {
   ]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentTask, setCurrentTask] = useState<TaskCreationRequest | null>(null);
+  const [, setCurrentTask] = useState<TaskCreationRequest | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const scrollViewRef = useRef<ScrollView>(null);
   const { supabase, user } = useSupabase();
@@ -57,15 +56,16 @@ const ChatScreen: React.FC = () => {
 
       if (error) throw error;
       setTasks(data || []);
-    } catch (error) {
-      console.error('Error loading tasks:', error);
+    } catch {
+      // Error loading tasks
     }
   };
 
   const scrollToBottom = () => {
-    setTimeout(() => {
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100);
+    });
   };
 
   const handleSend = async () => {
@@ -110,8 +110,7 @@ const ChatScreen: React.FC = () => {
         const response = await OpenAIService.chat(newMessages);
         setMessages([...newMessages, { role: 'assistant', content: response }]);
       }
-    } catch (error) {
-      console.error('Chat error:', error);
+    } catch {
       setMessages([...newMessages, { 
         role: 'assistant', 
         content: 'Sorry, I\'m having trouble right now. Please try again.' 
@@ -142,8 +141,8 @@ const ChatScreen: React.FC = () => {
       // Reload tasks
       await loadTasks();
       setCurrentTask(null);
-    } catch (error) {
-      console.error('Error creating task:', error);
+    } catch {
+      // Error creating task
     }
   };
 

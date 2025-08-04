@@ -17,7 +17,7 @@ import {
   Modal,
 } from 'react-native-paper';
 import { useSupabase } from '@/services/SupabaseContext';
-import { Task, TimeSlot, DaySchedule } from '@/types';
+import { Task, TimeSlot } from '@/types';
 
 const TodayScreen: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -49,8 +49,8 @@ const TodayScreen: React.FC = () => {
 
       if (error) throw error;
       setTasks(data || []);
-    } catch (error) {
-      console.error('Error loading tasks:', error);
+    } catch {
+      // Error loading tasks
     }
   };
 
@@ -144,14 +144,12 @@ const TodayScreen: React.FC = () => {
                 <View style={styles.taskMeta}>
                   <Chip 
                     mode="outlined" 
-                    textStyle={{ fontSize: 10 }}
                     style={[styles.priorityChip, { borderColor: getPriorityColor(slot.task.priority) }]}
                   >
                     {slot.task.priority}
                   </Chip>
                   <Chip 
                     mode="outlined" 
-                    textStyle={{ fontSize: 10 }}
                     style={[styles.statusChip, { borderColor: getStatusColor(slot.task.status) }]}
                   >
                     {slot.task.status}
@@ -173,7 +171,6 @@ const TodayScreen: React.FC = () => {
     const currentMonth = selectedDate.getMonth();
     const currentYear = selectedDate.getFullYear();
     const firstDay = new Date(currentYear, currentMonth, 1);
-    const lastDay = new Date(currentYear, currentMonth + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
 

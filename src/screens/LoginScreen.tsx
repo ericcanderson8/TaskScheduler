@@ -42,8 +42,9 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     try {
       await signIn(email, password);
       navigation.replace('Main');
-    } catch (error: any) {
-      Alert.alert('Login Error', error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      Alert.alert('Login Error', errorMessage);
     } finally {
       setLoading(false);
     }

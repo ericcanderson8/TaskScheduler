@@ -17,11 +17,9 @@ import {
   Chip,
   useTheme,
   SegmentedButtons,
-  Portal,
-  Modal,
 } from 'react-native-paper';
 import { useSupabase } from '@/services/SupabaseContext';
-import { Task, TaskForm, TimeSlot } from '@/types';
+import { Task, TaskForm } from '@/types';
 
 const AddTaskScreen: React.FC = () => {
   const [form, setForm] = useState<TaskForm>({
@@ -57,8 +55,8 @@ const AddTaskScreen: React.FC = () => {
 
       if (error) throw error;
       setExistingTasks(data || []);
-    } catch (error) {
-      console.error('Error loading tasks:', error);
+    } catch {
+      // Error loading tasks
     }
   };
 
@@ -175,8 +173,7 @@ const AddTaskScreen: React.FC = () => {
           }
         ]
       );
-    } catch (error) {
-      console.error('Error creating task:', error);
+    } catch {
       Alert.alert('Error', 'Failed to create task. Please try again.');
     } finally {
       setIsLoading(false);

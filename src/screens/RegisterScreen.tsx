@@ -57,8 +57,9 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
         'Account created successfully! Please check your email to verify your account.',
         [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
       );
-    } catch (error: any) {
-      Alert.alert('Registration Error', error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      Alert.alert('Registration Error', errorMessage);
     } finally {
       setLoading(false);
     }
