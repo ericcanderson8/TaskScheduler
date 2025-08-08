@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
   calendarContainer: {
     position: 'relative',
     minHeight: 24 * 80, // 24 hours * 80px per hour
-    paddingLeft: 80, // Space for time labels
+    paddingLeft: 100, // Increased space for time labels
   },
   hourContainer: {
     position: 'relative',
@@ -412,8 +412,8 @@ const styles = StyleSheet.create({
   },
   timeLabel: {
     position: 'absolute',
-    left: -80,
-    width: 70,
+    left: -100,
+    width: 90,
     alignItems: 'flex-end',
     paddingRight: 10,
     top: -8,
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   },
   taskBlock: {
     position: 'absolute',
-    left: 5, // Start tasks right after time labels
+    left: 25, // Increased space to avoid time label overlap
     right: 10,
     borderLeftWidth: 4,
     borderRadius: 6,
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
   },
   currentTimeLine: {
     position: 'absolute',
-    left: -10,
+    left: 0,
     right: 10,
     height: 2,
     flexDirection: 'row',
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     backgroundColor: '#ff5722',
-    marginLeft: -6,
+    marginLeft: 0,
   },
   currentTimeLineBar: {
     flex: 1,
