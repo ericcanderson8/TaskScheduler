@@ -204,7 +204,12 @@ const ChatScreen: React.FC = () => {
               ]}
             >
               <Card.Content style={styles.messageContent}>
-                <Text style={styles.messageText}>{message.content}</Text>
+                <Text style={[
+                  styles.messageText,
+                  message.role === 'user' ? styles.userMessageText : styles.assistantMessageText
+                ]}>
+                  {message.content}
+                </Text>
               </Card.Content>
             </Card>
           </View>
@@ -216,7 +221,7 @@ const ChatScreen: React.FC = () => {
             <Card style={styles.assistantCard}>
               <Card.Content style={styles.messageContent}>
                 <ActivityIndicator size="small" style={styles.loadingIndicator} />
-                <Text style={styles.messageText}>Thinking...</Text>
+                <Text style={[styles.messageText, styles.assistantMessageText]}>Thinking...</Text>
               </Card.Content>
             </Card>
           </View>
@@ -339,6 +344,12 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 16,
     lineHeight: 22,
+  },
+  userMessageText: {
+    color: '#ffffff',
+  },
+  assistantMessageText: {
+    color: '#1a1a1a',
   },
   loadingIndicator: {
     marginRight: 8,
