@@ -1,0 +1,249 @@
+/* TodayScreen Styles */
+
+.container {
+  flex: 1;
+  background-color: #fafafa;
+}
+
+.header {
+  padding-top: var(--header-padding-top);
+  padding-bottom: 20px;
+  padding-horizontal: 20px;
+  elevation: var(--header-elevation);
+  box-shadow: var(--header-shadow);
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dateContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.dateText {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-right: 4px;
+}
+
+.dayText {
+  font-size: 14px;
+  color: #666;
+  margin-right: 4px;
+}
+
+.dropdownIcon {
+  margin: 0;
+}
+
+.scheduleContainer {
+  flex: 1;
+  padding-horizontal: 20px;
+}
+
+.scheduleContent {
+  padding-bottom: 20px;
+  min-height: calc(24 * 80px); /* 24 hours * 80px per hour */
+}
+
+.calendarContainer {
+  position: relative;
+  min-height: calc(24 * 80px); /* 24 hours * 80px per hour */
+  padding-left: 100px; /* Space for time labels */
+}
+
+.hourContainer {
+  position: relative;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.timeLabel {
+  position: absolute;
+  left: -100px;
+  width: 90px;
+  align-items: flex-end;
+  padding-right: 10px;
+  top: -8px;
+}
+
+.timeText {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.hourLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.tasksContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.taskBlock {
+  position: absolute;
+  left: 25px; /* Increased space to avoid time label overlap */
+  right: 10px;
+  border-left-width: 4px;
+  border-radius: 6px;
+  padding: 8px;
+  elevation: var(--task-elevation);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.taskBlockTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.taskBlockTime {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.taskBlockDescription {
+  font-size: 12px;
+  color: #666;
+  line-height: 16px;
+}
+
+.currentTimeLine {
+  position: absolute;
+  left: 0;
+  right: 10px;
+  height: 2px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  z-index: 10;
+}
+
+.currentTimeCircle {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  background-color: #ff5722;
+  margin-left: 0;
+}
+
+.currentTimeLineBar {
+  flex: 1;
+  height: 2px;
+  background-color: #ff5722;
+}
+
+.monthModal {
+  background-color: white;
+  margin: 20px;
+  border-radius: 12px;
+  elevation: 5;
+}
+
+.monthContainer {
+  padding: 20px;
+}
+
+.monthHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.monthTitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.calendarGrid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.weekdayHeader {
+  width: 14.28%;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  padding-vertical: 8px;
+}
+
+.calendarDay {
+  width: 14.28%;
+  aspect-ratio: 1;
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-color: #e0e0e0;
+}
+
+.selectedDay {
+  background-color: #6200ee;
+}
+
+.todayDay {
+  background-color: #f3e5f5;
+  border-color: #6200ee;
+}
+
+.dayText {
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.otherMonthDay {
+  color: #ccc;
+}
+
+.selectedDayText {
+  color: white;
+  font-weight: bold;
+}
+
+.todayDayText {
+  color: #6200ee;
+  font-weight: bold;
+}
+
+/* CSS Variables for platform-specific styles */
+:root {
+  --header-padding-top: 60px;
+  --header-elevation: 2;
+  --header-shadow: none;
+  --task-elevation: 2;
+}
+
+/* Web-specific styles */
+@media (min-width: 768px) {
+  :root {
+    --header-padding-top: 30px;
+    --header-elevation: 0;
+    --header-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --task-elevation: 0;
+  }
+} 
