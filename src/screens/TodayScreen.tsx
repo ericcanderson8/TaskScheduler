@@ -106,6 +106,12 @@ const TodayScreen: React.FC = () => {
     return `${displayHour}:${minute || '00'} ${ampm}`;
   };
 
+  const formatTimeLabel = (hour: number) => {
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour} ${ampm}`;
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return '#4caf50';
@@ -153,7 +159,7 @@ const TodayScreen: React.FC = () => {
           <View key={hour} style={styles.hourContainer}>
             <View style={styles.timeLabel}>
               <Text style={styles.timeText}>
-                {formatTime(`${hour.toString().padStart(2, '0')}:00`)}
+                {formatTimeLabel(hour)}
               </Text>
             </View>
             <View style={styles.hourLine} />
@@ -434,7 +440,7 @@ const styles = StyleSheet.create({
   },
   taskBlock: {
     position: 'absolute',
-    left: 10,
+    left: 5, // Start tasks right after time labels
     right: 10,
     borderLeftWidth: 4,
     borderRadius: 6,
