@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  Platform,
 } from 'react-native';
 import {
   Text,
@@ -352,10 +353,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
   },
   header: {
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'web' ? 30 : 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    elevation: 2,
+    elevation: Platform.OS === 'web' ? 0 : 2,
+    shadowColor: Platform.OS === 'web' ? '#000' : undefined,
+    shadowOffset: Platform.OS === 'web' ? { width: 0, height: 2 } : undefined,
+    shadowOpacity: Platform.OS === 'web' ? 0.1 : undefined,
+    shadowRadius: Platform.OS === 'web' ? 4 : undefined,
   },
   headerContent: {
     flexDirection: 'row',
@@ -434,7 +439,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderRadius: 6,
     padding: 8,
-    elevation: 2,
+    elevation: Platform.OS === 'web' ? 0 : 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,

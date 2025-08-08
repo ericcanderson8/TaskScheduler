@@ -328,10 +328,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
   },
   header: {
-    paddingTop: 50,
+    paddingTop: Platform.OS === 'web' ? 20 : 50,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    elevation: 2,
+    elevation: Platform.OS === 'web' ? 0 : 2,
+    shadowColor: Platform.OS === 'web' ? '#000' : undefined,
+    shadowOffset: Platform.OS === 'web' ? { width: 0, height: 2 } : undefined,
+    shadowOpacity: Platform.OS === 'web' ? 0.1 : undefined,
+    shadowRadius: Platform.OS === 'web' ? 4 : undefined,
   },
   headerTitle: {
     fontSize: 28,
@@ -353,7 +357,11 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 20,
-    elevation: 2,
+    elevation: Platform.OS === 'web' ? 0 : 2,
+    shadowColor: Platform.OS === 'web' ? '#000' : undefined,
+    shadowOffset: Platform.OS === 'web' ? { width: 0, height: 1 } : undefined,
+    shadowOpacity: Platform.OS === 'web' ? 0.1 : undefined,
+    shadowRadius: Platform.OS === 'web' ? 2 : undefined,
   },
   sectionTitle: {
     fontSize: 18,
