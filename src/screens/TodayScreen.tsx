@@ -24,6 +24,7 @@ const TodayScreen: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showMonthView, setShowMonthView] = useState(false);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const { supabase, user } = useSupabase();
   const theme = useTheme();
 
@@ -34,6 +35,15 @@ const TodayScreen: React.FC = () => {
   useEffect(() => {
     generateTimeSlots();
   }, [tasks]);
+
+  useEffect(() => {
+    // Update current time every minute
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const loadTasks = async () => {
     if (!user) return;
@@ -59,23 +69,20 @@ const TodayScreen: React.FC = () => {
     const startHour = 0; // 12 AM
     const endHour = 24; // 12 AM next day
 
+    // Generate 5-minute slots for precise positioning
     for (let hour = startHour; hour < endHour; hour++) {
-      const startTime = `${hour.toString().padStart(2, '0')}:00`;
-      const endTime = `${(hour + 1).toString().padStart(2, '0')}:00`;
-      
-      // Find if there's a task in this time slot
-      const taskInSlot = tasks.find(task => {
-        if (!task.start_time) return false;
-        const taskHour = parseInt(task.start_time.split(':')[0]);
-        return taskHour === hour;
-      });
+      for (let minute = 0; minute < 60; minute += 5) {
+        const startTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        const endMinute = minute + 5;
+        const endTime = `${hour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;
 
-      slots.push({
-        start_time: startTime,
-        end_time: endTime,
-        isAvailable: !taskInSlot,
-        task: taskInSlot,
-      });
+        slots.push({
+          start_time: startTime,
+          end_time: endTime,
+          isAvailable: true,
+          task: undefined,
+        });
+      }
     }
 
     setTimeSlots(slots);
@@ -90,11 +97,12 @@ const TodayScreen: React.FC = () => {
   };
 
   const formatTime = (time: string) => {
+    if (!time) return '';
     const [hour, minute] = time.split(':');
     const hourNum = parseInt(hour);
     const ampm = hourNum >= 12 ? 'PM' : 'AM';
     const displayHour = hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
-    return `${displayHour}:${minute} ${ampm}`;
+    return `${displayHour}:${minute || '00'} ${ampm}`;
   };
 
   const getStatusColor = (status: string) => {
@@ -106,47 +114,90 @@ const TodayScreen: React.FC = () => {
     }
   };
 
-  const renderTimeSlot = (slot: TimeSlot, index: number) => {
-    const isCurrentHour = new Date().getHours() === index;
+  const getTaskPosition = (task: Task) => {
+    if (!task.start_time || !task.end_time) return null;
+    
+    const [startHour, startMinute] = task.start_time.split(':').map(Number);
+    const [endHour, endMinute] = task.end_time.split(':').map(Number);
+    
+    const startTotalMinutes = startHour * 60 + startMinute;
+    const endTotalMinutes = endHour * 60 + endMinute;
+    const durationMinutes = endTotalMinutes - startTotalMinutes;
+    
+    const hourHeight = 80; // Height of each hour slot
+    const minuteHeight = hourHeight / 60; // Height per minute
+    
+    return {
+      top: startTotalMinutes * minuteHeight,
+      height: Math.max(durationMinutes * minuteHeight, 30), // Minimum height of 30
+    };
+  };
+
+  const getCurrentTimePosition = () => {
+    const totalMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+    const hourHeight = 80;
+    const minuteHeight = hourHeight / 60;
+    
+    return totalMinutes * minuteHeight;
+  };
+
+  const renderCalendarView = () => {
+    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const currentTimePosition = getCurrentTimePosition();
     
     return (
-      <View key={index} style={styles.timeSlot}>
-        <View style={styles.timeLabel}>
-          <Text style={[
-            styles.timeText,
-            isCurrentHour && styles.currentTimeText
-          ]}>
-            {formatTime(slot.start_time)}
-          </Text>
+      <View style={styles.calendarContainer}>
+        {/* Time labels and grid lines */}
+        {hours.map((hour) => (
+          <View key={hour} style={styles.hourContainer}>
+            <View style={styles.timeLabel}>
+              <Text style={styles.timeText}>
+                {formatTime(`${hour.toString().padStart(2, '0')}:00`)}
+              </Text>
+            </View>
+            <View style={styles.hourLine} />
+          </View>
+        ))}
+        
+        {/* Tasks positioned absolutely */}
+        <View style={styles.tasksContainer}>
+          {tasks.map((task) => {
+            const position = getTaskPosition(task);
+            if (!position) return null;
+            
+            return (
+              <View
+                key={task.id}
+                style={[
+                  styles.taskBlock,
+                  {
+                    top: position.top,
+                    height: position.height,
+                    backgroundColor: getStatusColor(task.status) + '20',
+                    borderLeftColor: getStatusColor(task.status),
+                  }
+                ]}
+              >
+                <Text style={styles.taskBlockTitle} numberOfLines={1}>
+                  {task.title}
+                </Text>
+                <Text style={styles.taskBlockTime}>
+                  {formatTime(task.start_time || '')} - {formatTime(task.end_time || '')}
+                </Text>
+                {task.description && (
+                  <Text style={styles.taskBlockDescription} numberOfLines={2}>
+                    {task.description}
+                  </Text>
+                )}
+              </View>
+            );
+          })}
         </View>
         
-        <View style={[
-          styles.slotContent,
-          isCurrentHour && styles.currentSlot,
-          slot.task && styles.taskSlot
-        ]}>
-          {slot.task ? (
-            <Card style={[styles.taskCard, { borderLeftColor: getStatusColor(slot.task.status) }]}>
-              <Card.Content style={styles.taskContent}>
-                <Text style={styles.taskTitle}>{slot.task.title}</Text>
-                {slot.task.description && (
-                  <Text style={styles.taskDescription}>{slot.task.description}</Text>
-                )}
-                <View style={styles.taskMeta}>
-                  <Chip 
-                    mode="outlined" 
-                    style={[styles.statusChip, { borderColor: getStatusColor(slot.task.status) }]}
-                  >
-                    {slot.task.status}
-                  </Chip>
-                </View>
-              </Card.Content>
-            </Card>
-          ) : (
-            <View style={styles.emptySlot}>
-              <Text style={styles.emptySlotText}>Free</Text>
-            </View>
-          )}
+        {/* Current time indicator */}
+        <View style={[styles.currentTimeLine, { top: currentTimePosition }]}>
+          <View style={styles.currentTimeCircle} />
+          <View style={styles.currentTimeLineBar} />
         </View>
       </View>
     );
@@ -287,7 +338,7 @@ const TodayScreen: React.FC = () => {
         showsVerticalScrollIndicator={true}
         contentContainerStyle={styles.scheduleContent}
       >
-        {timeSlots.map((slot, index) => renderTimeSlot(slot, index))}
+        {renderCalendarView()}
       </ScrollView>
 
       {renderMonthView()}
@@ -335,75 +386,96 @@ const styles = StyleSheet.create({
   },
   scheduleContent: {
     paddingBottom: 20,
+    minHeight: 24 * 80, // 24 hours * 80px per hour
   },
-  timeSlot: {
+  calendarContainer: {
+    position: 'relative',
+    minHeight: 24 * 80, // 24 hours * 80px per hour
+    paddingLeft: 80, // Space for time labels
+  },
+  hourContainer: {
+    position: 'relative',
+    height: 80,
     flexDirection: 'row',
-    marginBottom: 8,
-    minHeight: 60,
+    alignItems: 'flex-start',
   },
   timeLabel: {
-    width: 80,
-    paddingTop: 8,
+    position: 'absolute',
+    left: -80,
+    width: 70,
     alignItems: 'flex-end',
-    paddingRight: 12,
+    paddingRight: 10,
+    top: -8,
   },
   timeText: {
     fontSize: 14,
     color: '#666',
     fontWeight: '500',
   },
-  currentTimeText: {
-    color: '#6200ee',
-    fontWeight: 'bold',
+  hourLine: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: '#e0e0e0',
   },
-  slotContent: {
-    flex: 1,
-    borderLeftWidth: 2,
-    borderLeftColor: '#e0e0e0',
-    paddingLeft: 12,
+  tasksContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
-  currentSlot: {
-    borderLeftColor: '#6200ee',
-    backgroundColor: '#f3e5f5',
-  },
-  taskSlot: {
-    borderLeftColor: '#6200ee',
-  },
-  emptySlot: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingVertical: 8,
-  },
-  emptySlotText: {
-    fontSize: 14,
-    color: '#999',
-    fontStyle: 'italic',
-  },
-  taskCard: {
-    marginVertical: 4,
+  taskBlock: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
     borderLeftWidth: 4,
+    borderRadius: 6,
+    padding: 8,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-  taskContent: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  taskTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  taskDescription: {
+  taskBlockTitle: {
     fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 2,
+  },
+  taskBlockTime: {
+    fontSize: 12,
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 2,
   },
-  taskMeta: {
+  taskBlockDescription: {
+    fontSize: 12,
+    color: '#666',
+    lineHeight: 16,
+  },
+  currentTimeLine: {
+    position: 'absolute',
+    left: -10,
+    right: 10,
+    height: 2,
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    zIndex: 10,
   },
-  statusChip: {
-    height: 24,
+  currentTimeCircle: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#ff5722',
+    marginLeft: -6,
+  },
+  currentTimeLineBar: {
+    flex: 1,
+    height: 2,
+    backgroundColor: '#ff5722',
   },
   monthModal: {
     backgroundColor: 'white',
